@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Asimok/StudioProjects/bs_car/app/src/main/res/layout-land/main.xml" value="0.33818342151675485" />
         <entry key="app/src/main/res/drawable/btn_close.xml" value="0.5875" />
         <entry key="app/src/main/res/layout-land/main.xml" value="0.2775831873905429" />
         <entry key="app/src/main/res/layout/activity_test.xml" value="0.3302083333333333" />
@@ -11,7 +12,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

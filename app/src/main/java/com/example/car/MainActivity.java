@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // 获取到蓝牙适配器
     public BluetoothAdapter mBluetoothAdapter;
     private Button openCarLamp, openCarBeep, connectCar, openCarLampLeft, openCarLampRight;
-    private Button autoDrive, headDrive, one, two, three, zero;
+    private Button autoDrive, headDrive, one, two, three, zero,free_run;
     private LongClickButton btn_back, btn_front, btn_Left, btn_Right;
     BluetoothDevice lvDevice = null;
     private boolean connectedCar = false;
@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         blue_sp = bluetooth_Pref.getInstance(this);
         setTitle(String.format("已绑定设备：  %s  %s", blue_sp.getBluetoothName(), blue_sp.getBluetoothAd()));
-        havaPeople = findViewById(R.id.havaPeople);
-        frontDistance = findViewById(R.id.frontDistance);
+//        havaPeople = findViewById(R.id.havaPeople);
+//        frontDistance = findViewById(R.id.frontDistance);
 
         openCarLamp = findViewById(R.id.table2id);
         connectCar = findViewById(R.id.connectCar);
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         two = findViewById(R.id.two);
         three = findViewById(R.id.three);
         zero = findViewById(R.id.zero);
+        free_run  = findViewById(R.id.bizhang);
 
         btn_back = (LongClickButton) findViewById(R.id.btn_back);
         btn_front = (LongClickButton) findViewById(R.id.btn_front);
@@ -184,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         two.setOnClickListener(this);
         three.setOnClickListener(this);
         zero.setOnClickListener(this);
+        free_run.setOnClickListener(this);
     }
 
 
@@ -227,12 +229,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, "请先连接蓝牙", Toast.LENGTH_SHORT).show();
                     } else {
                         try {
-                            send(blue_sp.getBluetoothAd(), Codes.head_drive);
+
+                            send(blue_sp.getBluetoothAd(), Codes.beep1);
                             connectCar.setBackgroundResource(R.drawable.btn_close);
                             headDrive.setBackgroundResource(R.drawable.btn_close);
                             autoDrive.setBackgroundResource(R.drawable.btn_open);
                             connectCar.setText("断开连接");
-                            connectedCar = true;
+
+                            //延时函数
+                            try {
+                                Thread.sleep(1000);//单位：毫秒
+                                send(blue_sp.getBluetoothAd(), Codes.head_drive);
+
+                                connectedCar = true;
+                            } catch (Exception ignored) {
+                            }
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -241,8 +253,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     connectCar.setText("连接小车");
                     try {
-                        send(blue_sp.getBluetoothAd(), Codes.car_stop);
                         connectCar.setBackgroundResource(R.drawable.btn_open);
+                        send(blue_sp.getBluetoothAd(), Codes.car_stop);
+
+                        try {
+                            Thread.sleep(1000);//单位：毫秒
+                            send(blue_sp.getBluetoothAd(), Codes.beep3);
+                            connectedCar = true;
+                        } catch (Exception ignored) {
+                        }
+
+
                         connectedCar = false;
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -324,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             boolopenTable1 = !boolopenTable1;
                         }
                     } else {
-                        send(blue_sp.getBluetoothAd(), Codes.table_1);
+                        send(blue_sp.getBluetoothAd(), Codes.car_stop);
                         openCarBeep.setBackgroundResource(R.drawable.btn_open);
                         boolopenTable1 = !boolopenTable1;
                     }
@@ -365,70 +386,97 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
                 break;
-            //            case R.id.one:
-//
-//                if (blue_sp.getBluetoothAd().equals("null")) {
-//                    Toast.makeText(MainActivity.this, "请先连接蓝牙", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    try {
-//                        send(blue_sp.getBluetoothAd(), Codes.one);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    zero.setBackgroundResource(R.drawable.btn_band);
-//                    one.setBackgroundResource(R.drawable.btn_close);
-//                    two.setBackgroundResource(R.drawable.btn_band);
-//                    three.setBackgroundResource(R.drawable.btn_band);
-//                }
-//                break;
-//            case R.id.two:
-//
-//                if (blue_sp.getBluetoothAd().equals("null")) {
-//                    Toast.makeText(MainActivity.this, "请先连接蓝牙", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    try {
-//                        send(blue_sp.getBluetoothAd(), Codes.two);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    zero.setBackgroundResource(R.drawable.btn_band);
-//                    two.setBackgroundResource(R.drawable.btn_close);
-//                    one.setBackgroundResource(R.drawable.btn_band);
-//                    three.setBackgroundResource(R.drawable.btn_band);
-//                }
-//                break;
-//            case R.id.three:
-//
-//                if (blue_sp.getBluetoothAd().equals("null")) {
-//                    Toast.makeText(MainActivity.this, "请先连接蓝牙", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    try {
-//                        send(blue_sp.getBluetoothAd(), Codes.three);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    zero.setBackgroundResource(R.drawable.btn_band);
-//                    three.setBackgroundResource(R.drawable.btn_close);
-//                    one.setBackgroundResource(R.drawable.btn_band);
-//                    two.setBackgroundResource(R.drawable.btn_band);
-//                }
-//                break;
-//            case R.id.zero:
-//
-//                if (blue_sp.getBluetoothAd().equals("null")) {
-//                    Toast.makeText(MainActivity.this, "请先连接蓝牙", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    try {
-//                        send(blue_sp.getBluetoothAd(), Codes.zero);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    zero.setBackgroundResource(R.drawable.btn_close);
-//                    three.setBackgroundResource(R.drawable.btn_band);
-//                    one.setBackgroundResource(R.drawable.btn_band);
-//                    two.setBackgroundResource(R.drawable.btn_band);
-//                }
-//                break;
+            case R.id.one:
+
+                if (blue_sp.getBluetoothAd().equals("null")) {
+                    Toast.makeText(MainActivity.this, "请先连接蓝牙", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        send(blue_sp.getBluetoothAd(), Codes.one);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    zero.setBackgroundResource(R.drawable.btn_band);
+                    one.setBackgroundResource(R.drawable.btn_close);
+                    two.setBackgroundResource(R.drawable.btn_band);
+                    three.setBackgroundResource(R.drawable.btn_band);
+                }
+                break;
+            case R.id.two:
+
+                if (blue_sp.getBluetoothAd().equals("null")) {
+                    Toast.makeText(MainActivity.this, "请先连接蓝牙", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        send(blue_sp.getBluetoothAd(), Codes.two);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    zero.setBackgroundResource(R.drawable.btn_band);
+                    two.setBackgroundResource(R.drawable.btn_close);
+                    one.setBackgroundResource(R.drawable.btn_band);
+                    three.setBackgroundResource(R.drawable.btn_band);
+                }
+                break;
+            case R.id.three:
+
+                if (blue_sp.getBluetoothAd().equals("null")) {
+                    Toast.makeText(MainActivity.this, "请先连接蓝牙", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        send(blue_sp.getBluetoothAd(), Codes.three);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    zero.setBackgroundResource(R.drawable.btn_band);
+                    three.setBackgroundResource(R.drawable.btn_close);
+                    one.setBackgroundResource(R.drawable.btn_band);
+                    two.setBackgroundResource(R.drawable.btn_band);
+                }
+                break;
+            case R.id.zero:
+
+                if (blue_sp.getBluetoothAd().equals("null")) {
+                    Toast.makeText(MainActivity.this, "请先连接蓝牙", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        send(blue_sp.getBluetoothAd(), Codes.zero);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    zero.setBackgroundResource(R.drawable.btn_close);
+                    three.setBackgroundResource(R.drawable.btn_band);
+                    one.setBackgroundResource(R.drawable.btn_band);
+                    two.setBackgroundResource(R.drawable.btn_band);
+                }
+                break;
+            case R.id.bizhang:
+
+                if (free_run.getText().toString().equals("自由")) {
+                    if (blue_sp.getBluetoothAd().equals("null")) {
+                        Toast.makeText(MainActivity.this, "请先连接蓝牙", Toast.LENGTH_SHORT).show();
+                    } else {
+                        try {
+                            //关闭避障
+                            send(blue_sp.getBluetoothAd(), Codes.free_run_open);
+                            free_run.setBackgroundResource(R.drawable.btn_close);
+                            free_run.setText("避障");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                } else {
+                    free_run.setText("自由");
+                    try {
+                        //打开避障
+                        free_run.setBackgroundResource(R.drawable.btn_open);
+                        send(blue_sp.getBluetoothAd(), Codes.free_run_close);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
             default:
                 break;
         }
